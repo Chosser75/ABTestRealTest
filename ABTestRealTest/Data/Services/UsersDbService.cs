@@ -25,6 +25,9 @@ namespace ABTestRealTest.Data.Services
             _configuration = configuration;
         }
 
+        public async Task<SystemUser> GetSystemUserAsync(int id) => await _usersDbContext.SystemUsers.
+                                                                            FirstOrDefaultAsync(u => u.Id == id) ?? new SystemUser();
+
         public IEnumerable<SystemUser> GetSystemUsers() => _usersDbContext.SystemUsers.AsNoTracking();
 
         public async Task<bool> UpdateUsersDatesAsync(IEnumerable<SystemUser> systemUsers)

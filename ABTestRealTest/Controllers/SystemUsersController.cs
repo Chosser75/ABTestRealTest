@@ -52,6 +52,12 @@ namespace ABTestRealTest.Controllers
             return _usersDbService.GetSystemUsers().ToArray();
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<SystemUser> GetSystemUser(int id)
+        {
+            return await _usersDbService.GetSystemUserAsync(id);
+        }
+
         [HttpPut("[action]")]
         public async Task<bool> UpdateUsersDates(IEnumerable<SystemUser> systemUsers)
         {

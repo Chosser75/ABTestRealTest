@@ -10,33 +10,56 @@ export class UserActivity extends Component {
             loading: true
         };
         this.submitEditedDates = this.submitEditedDates.bind(this);
+        this.checkDate = this.checkDate.bind(this);
     }
 
     componentDidMount() {
         this.populateWeatherData();
     }
 
-    submitEditedDates() {        
-        fetch('systemusers/updateusersdates', {
-            method: 'put',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+    async submitEditedDates() { 
+        //var editedUsers = Object.assign([], this.state.systemUsers); // doesn't work
+
+        for (var user of this.state.systemUsers) {
+            user.registrationDate = this.formatDate(user.registrationDate);
+            user.lastActivityDate = this.formatDate(user.lastActivityDate);
+        }
+
+        const response = await fetch('systemusers/updateusersdates', {
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
             body: JSON.stringify(this.state.systemUsers)
-        })
+            })
             .catch(err => console.log(err));
+        
+        this.convertToLocaleDates(this.state.systemUsers);
+
+        if (response.ok) {
+            alert("Data is successfully saved to DB");
+        }
     }
         
     editDate = (field, id, newDate) => {
-        let date = this.formatDate(newDate);
+        if (!/^[0-9.]+$/.test(newDate)) {
+            this.setState({
+                systemUsers: this.state.systemUsers
+            });
+            return;
+        }
 
+        this.setDate(field, id, newDate);        
+    }
+
+    setDate(field, id, newDate) {
         for (var user of this.state.systemUsers) {
-            if (user.id == id) {
-                if (field == "registrationDate") {
-                    user.registrationDate = date;
+            if (user.id === id) {
+                if (field === "registrationDate") {
+                    user.registrationDate = newDate;
                 }
                 else {
-                    user.lastActivityDate = date;
+                    user.lastActivityDate = newDate;
                 }
 
                 this.setState({
@@ -46,13 +69,26 @@ export class UserActivity extends Component {
                 return;
             }
         }
+    }
 
-        //if (field == "registrationDate") {
-        //    this.state.systemUsers[id - 1].registrationDate = newDate;
-        //}
-        //else {
-        //    this.state.systemUsers[id - 1].lastActivityDate = newDate;
-        //}
+    async checkDate(field, id, newDate) {
+        var isValid = this.validateDate(newDate)
+        if (isValid === false) {
+            var user = await this.GetUser(id);
+            if (field === "registrationDate") {
+                this.setDate(field, id, new Date(user.registrationDate).toLocaleDateString());
+            }
+            else {
+                this.setDate(field, id, new Date(user.lastActivityDate).toLocaleDateString());
+            }
+        }
+    }
+
+    validateDate(newDate) {
+        if (/^[0-9]{2}.[0-9]{2}.[0-9]{4}$/.test(newDate)) {
+            return true;
+        }
+        return false;
     }
 
     formatDate(newDate) {
@@ -79,9 +115,10 @@ export class UserActivity extends Component {
                         {systemUsers.map(systemUser =>
                             <tr key={systemUser.id}>
                                 <td>{systemUser.id}</td>
-                                <td><input className="border-0" value={new Date(systemUser.registrationDate).toLocaleDateString()}
-                                    onChange={(event) => this.editDate("registrationDate", systemUser.id, event.target.value)} /></td>
-                                <td><input className="border-0" value={new Date(systemUser.lastActivityDate).toLocaleDateString()}
+                                <td><input className="border-0" value={systemUser.registrationDate}
+                                    onChange={(event) => this.editDate("registrationDate", systemUser.id, event.target.value)}
+                                    onBlur={(event) => this.checkDate("registrationDate", systemUser.id, event.target.value)} /></td>
+                                <td><input className="border-0" value={systemUser.lastActivityDate}
                                     onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)} /></td>
                             </tr>
                         )}
@@ -111,9 +148,25 @@ export class UserActivity extends Component {
     async populateWeatherData() {
         const response = await fetch('systemusers/getsystemusers');
         const data = await response.json();
+        this.convertToLocaleDates(data);
         console.log(data);
+        
         this.setState({ systemUsers: data, loading: false });
     }
 
-    
+    async GetUser(id) {
+        const response = await fetch('systemusers/getsystemuser/' + id );
+        return await response.json();
+    }
+
+    convertToLocaleDates(data) {
+        for (let user of data) {
+            if (user.registrationDate !== "0") {
+                user.registrationDate = new Date(user.registrationDate).toLocaleDateString();
+            }
+            if (user.lastActivityDate !== "0") {
+                user.lastActivityDate = new Date(user.lastActivityDate).toLocaleDateString();
+            }
+        }
+    }
 }
