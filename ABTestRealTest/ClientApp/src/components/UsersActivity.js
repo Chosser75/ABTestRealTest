@@ -5,7 +5,10 @@ export class UserActivity extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { systemUsers: [], loading: true };
+        this.state = {
+            systemUsers: [],
+            loading: true
+        };
         this.submitEditedDates = this.submitEditedDates.bind(this);
     }
 
@@ -13,13 +16,7 @@ export class UserActivity extends Component {
         this.populateWeatherData();
     }
 
-    submitEditedDates() {
-        alert('submitEditedDates');
-        for (var item of this.state.systemUsers) {
-            item.registrationdate = '2021-01-18';
-            item.lastactivitydate = '2021-01-18';
-        }
-
+    submitEditedDates() {        
         fetch('systemusers/updateusersdates', {
             method: 'put',
             headers: {
@@ -28,6 +25,39 @@ export class UserActivity extends Component {
             body: JSON.stringify(this.state.systemUsers)
         })
             .catch(err => console.log(err));
+    }
+        
+    editDate = (field, id, newDate) => {
+        let date = this.formatDate(newDate);
+
+        for (var user of this.state.systemUsers) {
+            if (user.id == id) {
+                if (field == "registrationDate") {
+                    user.registrationDate = date;
+                }
+                else {
+                    user.lastActivityDate = date;
+                }
+
+                return;
+            }
+        }
+
+        //if (field == "registrationDate") {
+        //    this.state.systemUsers[id - 1].registrationDate = newDate;
+        //}
+        //else {
+        //    this.state.systemUsers[id - 1].lastActivityDate = newDate;
+        //}
+    }
+
+    formatDate(newDate) {
+        let dateValues = newDate.split('.');
+        let day = dateValues[0];
+        let month = dateValues[1];        
+        let year = dateValues[2];
+        let date = year + "-" + month + "-" + day + "T00:00:00";
+        return date;
     }
     
     renderUserActivityTable = (systemUsers) => {
@@ -45,8 +75,10 @@ export class UserActivity extends Component {
                         {systemUsers.map(systemUser =>
                             <tr key={systemUser.id}>
                                 <td>{systemUser.id}</td>
-                                <td>{systemUser.registrationdate}</td>
-                                <td>{systemUser.lastactivitydate}</td>
+                                <td><input className="border-0" value={new Date(systemUser.registrationDate).toLocaleDateString()}
+                                    onChange={(event) => this.editDate("registrationDate", systemUser.id, event.target.value)} /></td>
+                                <td><input className="border-0" value={new Date(systemUser.lastActivityDate).toLocaleDateString()}
+                                    onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)} /></td>
                             </tr>
                         )}
                     </tbody>
@@ -75,6 +107,7 @@ export class UserActivity extends Component {
     async populateWeatherData() {
         const response = await fetch('systemusers/getsystemusers');
         const data = await response.json();
+        console.log(data);
         this.setState({ systemUsers: data, loading: false });
     }
 
