@@ -39,6 +39,10 @@ export class UserActivity extends Component {
                     user.lastActivityDate = date;
                 }
 
+                this.setState({
+                    systemUsers: this.state.systemUsers
+                });
+
                 return;
             }
         }
