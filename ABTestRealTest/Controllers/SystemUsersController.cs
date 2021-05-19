@@ -12,38 +12,21 @@ namespace ABTestRealTest.Controllers
     [ApiController]
     [Route("[controller]")]
     public class SystemUsersController : ControllerBase
-    {
-        //private static readonly string[] Summaries = new[]
-        //{
-        //    "Freezing1", "Bracing1", "Chilly1", "Cool1", "Mild1", "Warm1", "Balmy1", "Hot1", "Sweltering1", "Scorching1"
-        //};
-
-        //[HttpGet("[action]")]
-        //public IEnumerable<WeatherForecast> GetTemps()
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
-
-
-
-
-
-
+    {        
         private readonly ILogger<SystemUsersController> _logger;
         private readonly IUsersDbService _usersDbService;
+        private readonly IRollingRetentionService _retentionService;
+        private readonly ISpeedTestService _testService;
 
         public SystemUsersController(ILogger<SystemUsersController> logger,
-                                     IUsersDbService usersDbService)
+                                     IUsersDbService usersDbService,
+                                     IRollingRetentionService retentionService,
+                                     ISpeedTestService testService)
         {
             _logger = logger;
             _usersDbService = usersDbService;
+            _retentionService = retentionService;
+            _testService = testService;
         }
 
         [HttpGet("[action]")]
@@ -52,10 +35,39 @@ namespace ABTestRealTest.Controllers
             return _usersDbService.GetSystemUsers().ToArray();
         }
 
-        [HttpPut("[action]")]
-        public async Task<bool> UpdateUsersDates(IEnumerable<SystemUser> systemUsers)
+        [HttpGet("[action]/{id}")]
+        public async Task<SystemUser> GetSystemUser(int id)
         {
+            return await _usersDbService.GetSystemUserAsync(id);
+        }
+
+        [HttpPut("[action]")]
+        public async Task<ActionResult<bool>> UpdateUsersDates(IEnumerable<SystemUser> systemUsers)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             return await _usersDbService.UpdateUsersDatesAsync(systemUsers);
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<ChartData> GetChartData()
+        {
+            return _retentionService.GetChartData().ToArray();
+        }
+
+        [HttpGet("[action]/{xDays}")]
+        public RollingRetentionResult GetRollingRetentionXDay(int xDays)
+        {
+            return new RollingRetentionResult { Value = _retentionService.GetRollingRetentionXDay(xDays) };
+        }
+
+        [HttpGet("[action]")]
+        public async Task<SpeedTestResults> GetSpeedTestResults()
+        {
+            return await _testService.RunSpeedTestAsync();
         }
     }
 }
