@@ -42,6 +42,20 @@ namespace ABTestRealTest.Data.Services
             return await SaveChangesAsync();
         } 
 
+        public IEnumerable<ChartData> GetChartData()
+        {
+            var data = new List<ChartData>();
+            var users = _usersDbContext.SystemUsers.AsNoTracking().AsEnumerable();
+
+            foreach(var user in users)
+            {
+                data.Add(new ChartData { UserId = user.Id, 
+                                ActivityDays = (user.LastActivityDate.GetValueOrDefault() - user.RegistrationDate.GetValueOrDefault()).Days });
+            }
+
+            return data;
+        }
+
         private async Task<bool> SaveChangesAsync()
         {
             var isProcessed = false;

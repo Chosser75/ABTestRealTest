@@ -128,6 +128,12 @@ export class UserActivity extends Component {
                     </tbody>
                 </table>
                 <button className="btn btn-primary" onClick={this.submitEditedDates}>Save</button>
+                <br/>
+                <button className="btn btn-primary mt-4" onClick={this.showHideRollingRetention}>
+                    Calculate
+                </button>
+                <br /><br />
+                {this.state.showRollingRetention && <RollingRetention />}
             </div>
 
         );
@@ -146,13 +152,7 @@ export class UserActivity extends Component {
             <div>
                 <h1 id="tabelLabel" >System users activity</h1>
                 <hr/>
-                {contents}
-
-                <button className="btn btn-primary mt-4" onClick={this.showHideRollingRetention}>
-                    Calculate
-                </button>
-                <br/>
-                {this.state.showRollingRetention && <RollingRetention />}
+                {contents}                
             </div>
         );
     }

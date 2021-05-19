@@ -63,5 +63,11 @@ namespace ABTestRealTest.Controllers
         {
             return await _usersDbService.UpdateUsersDatesAsync(systemUsers);
         }
+
+        [HttpGet("[action]")]
+        public IEnumerable<ChartData> GetChartData()
+        {
+            return _usersDbService.GetChartData().ToArray();
+        }
     }
 }

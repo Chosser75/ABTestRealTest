@@ -11,5 +11,6 @@ namespace ABTestRealTest.Data.Interfaces
         IEnumerable<SystemUser> GetSystemUsers();
         Task<bool> UpdateUsersDatesAsync(IEnumerable<SystemUser> systemUsers);
         Task<SystemUser> GetSystemUserAsync(int id);
+        IEnumerable<ChartData> GetChartData();
     }
 }
