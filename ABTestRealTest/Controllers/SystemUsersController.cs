@@ -16,14 +16,17 @@ namespace ABTestRealTest.Controllers
         private readonly ILogger<SystemUsersController> _logger;
         private readonly IUsersDbService _usersDbService;
         private readonly IRollingRetentionService _retentionService;
+        private readonly ISpeedTestService _testService;
 
         public SystemUsersController(ILogger<SystemUsersController> logger,
                                      IUsersDbService usersDbService,
-                                     IRollingRetentionService retentionService)
+                                     IRollingRetentionService retentionService,
+                                     ISpeedTestService testService)
         {
             _logger = logger;
             _usersDbService = usersDbService;
             _retentionService = retentionService;
+            _testService = testService;
         }
 
         [HttpGet("[action]")]
@@ -59,6 +62,12 @@ namespace ABTestRealTest.Controllers
         public RollingRetentionResult GetRollingRetentionXDay(int xDays)
         {
             return new RollingRetentionResult { Value = _retentionService.GetRollingRetentionXDay(xDays) };
+        }
+
+        [HttpGet("[action]")]
+        public async Task<SpeedTestResults> GetSpeedTestResults()
+        {
+            return await _testService.RunSpeedTestAsync();
         }
     }
 }
