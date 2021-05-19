@@ -87,22 +87,58 @@ export class UserActivity extends Component {
                 this.setDate(field, id, new Date(user.lastActivityDate).toLocaleDateString());
             }
         }
+        else {
+            var date = this.splittedDate.day + "." + this.splittedDate.month + "." + this.splittedDate.year;
+            date = this.formatDate(date);
+            this.setDate(field, id, new Date(date).toLocaleDateString());            
+        }
     }
 
     validateDate(newDate) {
-        if (/^[0-9]{2}.[0-9]{2}.[0-9]{4}$/.test(newDate)) {
+        if (/^[0-9]{2}.[0-9]{2}.[0-9]{4}$/.test(newDate) || 
+            /^[1-9]{1}.[1-9]{1}.[0-9]{4}$/.test(newDate) ||
+            /^[1-9]{1}.[0-9]{2}.[0-9]{4}$/.test(newDate) ||
+            /^[0-9]{2}.[1-9]{1}.[0-9]{4}$/.test(newDate)) {
+            console.log("Date " + newDate + " passed regex");
+            this.splitDate(newDate);
+
+            let day = Number(this.splittedDate.day);
+            let month = Number(this.splittedDate.month);
+            let year = Number(this.splittedDate.year);
+            if (day < 1 || month < 1 || year < 1 || month > 12 || day > 31) {
+                return false;
+            }
+
             return true;
         }
         return false;
     }
 
+    splittedDate = {
+        day: "",
+        month: "",
+        year: ""
+    }
+
     formatDate(newDate) {
-        let dateValues = newDate.split('.');
-        let day = dateValues[0];
-        let month = dateValues[1];        
-        let year = dateValues[2];
-        let date = year + "-" + month + "-" + day + "T00:00:00";
+        this.splitDate(newDate);
+        let date = this.splittedDate.year + "-" + this.splittedDate.month + "-" + this.splittedDate.day + "T00:00:00";
         return date;
+    }
+
+    splitDate(newDate) {
+        let dateValues = newDate.split('.');
+        this.splittedDate.day = dateValues[0];
+        this.splittedDate.month = dateValues[1];
+        this.splittedDate.year = dateValues[2];
+
+        if (this.splittedDate.day.length == 1) {
+            this.splittedDate.day = "0" + this.splittedDate.day;
+        }
+
+        if (this.splittedDate.month.length == 1) {
+            this.splittedDate.month = "0" + this.splittedDate.month;
+        }
     }
     
     renderUserActivityTable = (systemUsers) => {
