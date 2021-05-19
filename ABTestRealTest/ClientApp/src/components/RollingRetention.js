@@ -54,7 +54,7 @@ export class RollingRetention extends Component {
                     options={{
                         title: {
                             display: true,
-                            text: 'Average Rainfall per month',
+                            text: "Users life duration chart",
                             fontSize: 20
                         },
                         legend: {
