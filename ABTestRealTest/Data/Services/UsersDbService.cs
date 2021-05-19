@@ -28,7 +28,7 @@ namespace ABTestRealTest.Data.Services
         public async Task<SystemUser> GetSystemUserAsync(int id) => await _usersDbContext.SystemUsers.
                                                                             FirstOrDefaultAsync(u => u.Id == id) ?? new SystemUser();
 
-        public IEnumerable<SystemUser> GetSystemUsers() => _usersDbContext.SystemUsers.AsNoTracking();
+        public IEnumerable<SystemUser> GetSystemUsers() => _usersDbContext.SystemUsers.AsNoTracking().AsEnumerable();
 
         public async Task<bool> UpdateUsersDatesAsync(IEnumerable<SystemUser> systemUsers)
         {
@@ -41,20 +41,6 @@ namespace ABTestRealTest.Data.Services
             
             return await SaveChangesAsync();
         } 
-
-        public IEnumerable<ChartData> GetChartData()
-        {
-            var data = new List<ChartData>();
-            var users = _usersDbContext.SystemUsers.AsNoTracking().AsEnumerable();
-
-            foreach(var user in users)
-            {
-                data.Add(new ChartData { UserId = user.Id, 
-                                ActivityDays = (user.LastActivityDate.GetValueOrDefault() - user.RegistrationDate.GetValueOrDefault()).Days });
-            }
-
-            return data;
-        }
 
         private async Task<bool> SaveChangesAsync()
         {

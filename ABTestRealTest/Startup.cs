@@ -36,6 +36,7 @@ namespace ABTestRealTest
             });
 
             services.AddScoped<IUsersDbService, UsersDbService>();
+            services.AddScoped<IRollingRetentionService, RollingRetentionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
