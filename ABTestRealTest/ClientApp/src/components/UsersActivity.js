@@ -39,6 +39,8 @@ export class UserActivity extends Component {
         
         this.convertToLocaleDates(this.state.systemUsers);
 
+        this.setState({ systemUsers: this.state.systemUsers, showRollingRetention: false });
+
         if (response.ok) {
             alert("Data is successfully saved to DB");
         }
@@ -127,10 +129,10 @@ export class UserActivity extends Component {
                         )}
                     </tbody>
                 </table>
-                <button className="btn btn-primary" onClick={this.submitEditedDates}>Save</button>
+                <button className="btn btn-primary" style={{ width: 100 }} onClick={this.submitEditedDates}>Save</button>
                 <br/>
-                <button className="btn btn-primary mt-4" onClick={this.showHideRollingRetention}>
-                    Calculate
+                <button className="btn btn-primary mt-4" style={{ width: 100 }} onClick={this.showHideRollingRetention}>
+                    {!this.state.showRollingRetention && "Calculate" || "Hide"}
                 </button>
                 <br /><br />
                 {this.state.showRollingRetention && <RollingRetention />}
