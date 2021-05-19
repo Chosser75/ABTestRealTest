@@ -39,8 +39,13 @@ namespace ABTestRealTest.Controllers
         }
 
         [HttpPut("[action]")]
-        public async Task<bool> UpdateUsersDates(IEnumerable<SystemUser> systemUsers)
+        public async Task<ActionResult<bool>> UpdateUsersDates(IEnumerable<SystemUser> systemUsers)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             return await _usersDbService.UpdateUsersDatesAsync(systemUsers);
         }
 
