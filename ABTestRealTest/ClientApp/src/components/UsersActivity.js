@@ -1,5 +1,7 @@
 ﻿import React, { Component } from 'react';
 
+import { RollingRetention } from './RollingRetention';
+
 export class UserActivity extends Component {
     static displayName = 'System users activity';
 
@@ -7,6 +9,7 @@ export class UserActivity extends Component {
         super(props);
         this.state = {
             systemUsers: [],
+            showRollingRetention: false,
             loading: true
         };
         this.submitEditedDates = this.submitEditedDates.bind(this);
@@ -14,7 +17,7 @@ export class UserActivity extends Component {
     }
 
     componentDidMount() {
-        this.populateWeatherData();
+        this.populateSystemUsers();
     }
 
     async submitEditedDates() { 
@@ -130,6 +133,9 @@ export class UserActivity extends Component {
         );
     }
 
+    showHideRollingRetention = () => {
+        this.setState({ showRollingRetention: !this.state.showRollingRetention });
+    }
 
     render() {
         let contents = this.state.loading
@@ -141,16 +147,20 @@ export class UserActivity extends Component {
                 <h1 id="tabelLabel" >System users activity</h1>
                 <hr/>
                 {contents}
+
+                <button className="btn btn-primary mt-4" onClick={this.showHideRollingRetention}>
+                    Calculate
+                </button>
+                <br/>
+                {this.state.showRollingRetention && <RollingRetention />}
             </div>
         );
     }
 
-    async populateWeatherData() {
+    async populateSystemUsers() {
         const response = await fetch('systemusers/getsystemusers');
         const data = await response.json();
         this.convertToLocaleDates(data);
-        console.log(data);
-        
         this.setState({ systemUsers: data, loading: false });
     }
 
