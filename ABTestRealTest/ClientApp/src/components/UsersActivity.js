@@ -3,6 +3,7 @@ import '../custom.css'
 import { RollingRetention } from './RollingRetention';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import MaskedInput from 'react-maskedinput';
 
 export class UserActivity extends Component {
     static displayName = 'System users activity';
@@ -119,6 +120,9 @@ export class UserActivity extends Component {
                                 <td>
                                     <DatePicker
                                         dateFormat="dd.MM.yyyy"
+                                        customInput={
+                                            <MaskedInput mask="11.11.1111" placeholder="dd.mm.yyyy" />
+                                        }
                                         selected={systemUser.registrationDate}
                                         onChange={date => this.setDate("registrationDate", systemUser.id, date)}
                                         filterDate={date => date <= systemUser.lastActivityDate }
@@ -127,6 +131,9 @@ export class UserActivity extends Component {
                                 <td>
                                     <DatePicker
                                         dateFormat="dd.MM.yyyy"
+                                        customInput={
+                                            <MaskedInput mask="11.11.1111" placeholder="dd.mm.yyyy" />
+                                        }
                                         selected={systemUser.lastActivityDate}
                                         onChange={date => this.setDate("lastActivityDate", systemUser.id, date)}
                                         filterDate={date => date >= systemUser.registrationDate}
