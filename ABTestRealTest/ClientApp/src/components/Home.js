@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../custom.css'
 
 export class Home extends Component {
     static displayName = Home.name;
@@ -14,9 +15,15 @@ export class Home extends Component {
         this.runServerSpeedTests = this.runServerSpeedTests.bind(this);
     }
 
-    render () {
+    render() {
+        const titleStyle = {
+            fontFamily: "Ubuntu",
+            fontStyle: "normal",
+            color: "#5D6E97"
+        };
+
         return (
-            <div>
+            <div style={titleStyle}>
                 <h2>Hello, AB TEST REAL!</h2>
                 <hr/>
                 <h4>Daulet Kshibekov's test task</h4>
@@ -36,7 +43,7 @@ export class Home extends Component {
                         GetRollingRetention elapsed time: {this.state.getRollingRetentionTime} milliseconds
                     </div>
                     <div className="form-group">
-                        <button className="btn btn-primary mt-4" onClick={this.runServerSpeedTests}>
+                        <button className="btn-figma mt-4" onClick={this.runServerSpeedTests}>
                             Run server speed test
                     </button>
                     </div>                   

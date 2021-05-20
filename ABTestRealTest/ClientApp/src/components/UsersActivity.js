@@ -143,8 +143,8 @@ export class UserActivity extends Component {
     
     renderUserActivityTable = (systemUsers) => {
         return (
-            <div>
-                <table className='table table-striped' aria-labelledby="tabelLabel">
+            <div className='container-figma'>
+                <table className='table-figma' aria-labelledby="tabelLabel">
                     <thead>
                         <tr>
                             <th>UserId</th>
@@ -156,18 +156,19 @@ export class UserActivity extends Component {
                         {systemUsers.map(systemUser =>
                             <tr key={systemUser.id}>
                                 <td>{systemUser.id}</td>
-                                <td><input className="border-0" value={systemUser.registrationDate}
+                                <td><input style={this.inputStyle}
+                                    value={systemUser.registrationDate}
                                     onChange={(event) => this.editDate("registrationDate", systemUser.id, event.target.value)}
                                     onBlur={(event) => this.checkDate("registrationDate", systemUser.id, event.target.value)} /></td>
-                                <td><input className="border-0" value={systemUser.lastActivityDate}
+                                <td><input style={this.inputStyle} value={systemUser.lastActivityDate}
                                     onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)} /></td>
                             </tr>
                         )}
                     </tbody>
                 </table>
-                <button className="btn btn-primary" style={{ width: 100 }} onClick={this.submitEditedDates}>Save</button>
+                <button className="btn-figma mt-4" onClick={this.submitEditedDates}>Save</button>
                 <br/>
-                <button className="btn btn-primary mt-4" style={{ width: 100 }} onClick={this.showHideRollingRetention}>
+                <button className="btn-figma mt-3" onClick={this.showHideRollingRetention}>
                     {!this.state.showRollingRetention && "Calculate" || "Hide"}
                 </button>
                 <br /><br />
@@ -177,18 +178,41 @@ export class UserActivity extends Component {
         );
     }
 
+    // for some reason, scc class input-figma from custom.css doesn't get applied to inputs
+    inputStyle = {
+        border: "none",
+        height: "45.47px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        textAlign: "center",
+        boxSizing: "border-box",
+        outline: "none",
+        fontFamily: "Ubuntu",
+        fontStyle: "normal",
+        fontWeight: "300",
+        fontSize: "14px",
+        lineHeight: "16px",
+        color: "#5D6E97"
+    };
+
     showHideRollingRetention = () => {
         this.setState({ showRollingRetention: !this.state.showRollingRetention });
     }
 
     render() {
+        const titleStyle = {            
+            fontFamily: "Ubuntu",
+            fontStyle: "normal",
+            color: "#5D6E97"
+        };
+
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : this.renderUserActivityTable(this.state.systemUsers);
 
         return (
             <div>
-                <h1 id="tabelLabel" >System users activity</h1>
+                <h1 id="tabelLabel" style={titleStyle}>System users activity</h1>
                 <hr/>
                 {contents}                
             </div>

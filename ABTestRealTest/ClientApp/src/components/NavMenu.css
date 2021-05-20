@@ -16,3 +16,21 @@ html {
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
+
+.font-logo-figma {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 23px;
+    text-transform: uppercase;
+    color: #5D6E97 !important;
+}
+
+.font-menu-item-figma {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 23px;
+    color: #5D6E97 !important;
+}

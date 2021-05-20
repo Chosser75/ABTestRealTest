@@ -7,8 +7,96 @@ code {
   color: #E01A76;
 }
 
+.font-figma {
+    font-family: Ubuntu;
+    font-style: normal;
+    color: #5D6E97;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+.btn-figma {
+    width: 189px;
+    height: 38px;
+    background: #4A9DFF;
+    border-radius: 10px;
+    border: none;
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFFFFF;
+    outline: none !important;
+}
+
+.container-figma {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-figma {
+    background-color:transparent;
+    width: 772px;
+    border: none;
+}
+
+.table-figma thead tr {
+    background-color: transparent;
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: #3C5AA8;
+    opacity: 0.4;
+    text-align: center;
+    width: 770px;
+    height: 45.47px;    
+}
+
+.table-figma th,
+.table-figma td {
+    border: none;
+    text-align: center;
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 16px;
+    color: #5D6E97;
+}
+
+.table-figma tbody {
+    box-shadow: 5px 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.table-figma tbody tr {
+    width: 770px;
+    height: 45.47px;
+    background: #FFFFFF;
+    border-radius: 5px;
+    border-left: none;
+    border-right: none;
+    border-bottom: 0.5px solid rgba(93, 110, 151, 0.4);
+}
+
+.input-figma {
+    border: none;
+    height: 45.47px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    box-sizing: border-box;
 }
