@@ -58,28 +58,24 @@ export class UserActivity extends Component {
     }
 
     setDate(field, id, newDate) {
-        for (var user of this.state.systemUsers) {
-            if (user.id === id) {
-                if (field === "registrationDate") {
-                    user.registrationDate = newDate;
-                }
-                else {
-                    user.lastActivityDate = newDate;
-                }
+            var user = this.getUserById(id);
 
-                this.setState({
-                    systemUsers: this.state.systemUsers
-                });
-
-                return;
+            if (field === "registrationDate") {
+                user.registrationDate = newDate;
             }
-        }
+            else {
+                user.lastActivityDate = newDate;
+            }
+
+            this.setState({
+                systemUsers: this.state.systemUsers
+            });
     }
 
     async checkDate(field, id, newDate) {
-        var isValid = this.validateDate(newDate)
+        var isValid = this.validateDate(field, id, newDate)
         if (isValid === false) {
-            var user = await this.GetUser(id);
+            var user = await this.getUserFromDb(id);
             if (field === "registrationDate") {
                 this.setDate(field, id, new Date(user.registrationDate).toLocaleDateString());
             }
@@ -94,12 +90,11 @@ export class UserActivity extends Component {
         }
     }
 
-    validateDate(newDate) {
+    validateDate(field, id, newDate) {
         if (/^[0-9]{2}.[0-9]{2}.[0-9]{4}$/.test(newDate) || 
             /^[1-9]{1}.[1-9]{1}.[0-9]{4}$/.test(newDate) ||
             /^[1-9]{1}.[0-9]{2}.[0-9]{4}$/.test(newDate) ||
             /^[0-9]{2}.[1-9]{1}.[0-9]{4}$/.test(newDate)) {
-            console.log("Date " + newDate + " passed regex");
             this.splitDate(newDate);
 
             let day = Number(this.splittedDate.day);
@@ -109,15 +104,49 @@ export class UserActivity extends Component {
                 return false;
             }
 
+            let regDate = "";
+            let lastDate = "";
+            let formattedDate = this.splittedDate.year + "-" + this.splittedDate.month + "-" + this.splittedDate.day;
+            var user = this.getUserById(id);
+
+            if (field === "registrationDate") {
+                regDate = formattedDate;
+                lastDate = this.flipDate(user.lastActivityDate);
+            }
+            else {
+                regDate = this.flipDate(user.registrationDate);
+                lastDate = formattedDate;
+            }
+
+            let regDateAsDate = new Date(regDate);
+            let lastDateAsDate = new Date(lastDate);
+
+            if (regDateAsDate.getTime() > lastDateAsDate.getTime()) {
+                return false;
+            }
+
             return true;
         }
         return false;
+    }
+
+    getUserById = (id) => {
+        for (var user of this.state.systemUsers) {
+            if (user.id === id) {
+                return user;
+            }
+        }
     }
 
     splittedDate = {
         day: "",
         month: "",
         year: ""
+    }
+
+    flipDate(date) {
+        let dateValues = date.split('.');
+        return dateValues[2] + "-" + dateValues[1] + "-" + dateValues[0];
     }
 
     formatDate(newDate) {
@@ -226,7 +255,7 @@ export class UserActivity extends Component {
         this.setState({ systemUsers: data, loading: false });
     }
 
-    async GetUser(id) {
+    async getUserFromDb(id) {
         const response = await fetch('systemusers/getsystemuser/' + id );
         return await response.json();
     }

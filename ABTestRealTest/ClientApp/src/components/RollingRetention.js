@@ -48,7 +48,7 @@ export class RollingRetention extends Component {
     renderChart = () => {
         return (
             <div style={{ width: "700px" }}>
-                <p>Rolling Retention 7 day: {this.state.rollingRetensionXDay}</p>
+                <p>Rolling Retention 7 day: {this.state.rollingRetensionXDay}%</p>
                 <hr />
                 <Bar
                     data={this.state}

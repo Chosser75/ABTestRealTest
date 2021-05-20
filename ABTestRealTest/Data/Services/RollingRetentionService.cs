@@ -51,7 +51,7 @@ namespace ABTestRealTest.Data.Services
             registeredUsersCount = (double)users.Where(u => (DateTime.Now
                         - u.RegistrationDate.GetValueOrDefault()).Days >= xDay).Count();
 
-            return registeredUsersCount == 0 ? 0 : returnedUsersCount / registeredUsersCount * 100;
+            return Math.Round(registeredUsersCount == 0 ? 0 : returnedUsersCount / registeredUsersCount * 100, 2);
         }
     }
 }
