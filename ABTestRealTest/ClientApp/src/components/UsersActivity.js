@@ -156,12 +156,12 @@ export class UserActivity extends Component {
                         {systemUsers.map(systemUser =>
                             <tr key={systemUser.id}>
                                 <td>{systemUser.id}</td>
-                                <td><input style={this.inputStyle}
-                                    value={systemUser.registrationDate}
+                                <td><input style={this.inputStyle} value={systemUser.registrationDate}
                                     onChange={(event) => this.editDate("registrationDate", systemUser.id, event.target.value)}
                                     onBlur={(event) => this.checkDate("registrationDate", systemUser.id, event.target.value)} /></td>
                                 <td><input style={this.inputStyle} value={systemUser.lastActivityDate}
-                                    onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)} /></td>
+                                    onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)}
+                                    onBlur={(event) => this.checkDate("lastActivityDate", systemUser.id, event.target.value)}                                /></td>
                             </tr>
                         )}
                     </tbody>
