@@ -53,9 +53,15 @@ namespace ABTestRealTest.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<ChartData> GetChartData()
+        public IEnumerable<ChartData> GetChartDataExclusive()
         {
-            return _retentionService.GetChartData().ToArray();
+            return _retentionService.GetChartDataExclusive().ToArray();
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<ChartData> GetChartDataInclusive()
+        {
+            return _retentionService.GetChartDataInclusive().ToArray();
         }
 
         [HttpGet("[action]/{xDays}")]

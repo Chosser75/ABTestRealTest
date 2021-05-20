@@ -169,6 +169,19 @@ export class UserActivity extends Component {
             this.splittedDate.month = "0" + this.splittedDate.month;
         }
     }
+
+    convertToLocaleDates(data) {
+        for (let user of data) {
+            if (user.registrationDate !== "0") {
+                user.registrationDate = new Date(user.registrationDate).toLocaleDateString();
+            }
+            if (user.lastActivityDate !== "0") {
+                user.lastActivityDate = new Date(user.lastActivityDate).toLocaleDateString();
+            }
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
     
     renderUserActivityTable = (systemUsers) => {
         return (
@@ -190,7 +203,7 @@ export class UserActivity extends Component {
                                     onBlur={(event) => this.checkDate("registrationDate", systemUser.id, event.target.value)} /></td>
                                 <td><input style={this.inputStyle} value={systemUser.lastActivityDate}
                                     onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)}
-                                    onBlur={(event) => this.checkDate("lastActivityDate", systemUser.id, event.target.value)}                                /></td>
+                                    onBlur={(event) => this.checkDate("lastActivityDate", systemUser.id, event.target.value)} /></td>
                             </tr>
                         )}
                     </tbody>
@@ -258,16 +271,5 @@ export class UserActivity extends Component {
     async getUserFromDb(id) {
         const response = await fetch('systemusers/getsystemuser/' + id );
         return await response.json();
-    }
-
-    convertToLocaleDates(data) {
-        for (let user of data) {
-            if (user.registrationDate !== "0") {
-                user.registrationDate = new Date(user.registrationDate).toLocaleDateString();
-            }
-            if (user.lastActivityDate !== "0") {
-                user.lastActivityDate = new Date(user.lastActivityDate).toLocaleDateString();
-            }
-        }
-    }
+    }    
 }

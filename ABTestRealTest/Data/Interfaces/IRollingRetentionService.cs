@@ -8,7 +8,8 @@ namespace ABTestRealTest.Data.Interfaces
 {
     public interface IRollingRetentionService
     {
-        IEnumerable<ChartData> GetChartData();
+        IEnumerable<ChartData> GetChartDataExclusive();
+        IEnumerable<ChartData> GetChartDataInclusive();
         double GetRollingRetentionXDay(int xDay);
     }
 }

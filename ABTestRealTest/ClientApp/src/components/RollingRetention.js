@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
+import '../custom.css'
 
 export class RollingRetention extends Component {
     static displayName = RollingRetention.name;
@@ -18,7 +19,7 @@ export class RollingRetention extends Component {
 
     chartDataSet = [
         {
-            label: 'Users life duration',
+            label: 'Users q-ty',
             backgroundColor: 'blue',
             borderColor: 'rgba(0,0,0,1)',
             borderWidth: 2,
@@ -31,23 +32,23 @@ export class RollingRetention extends Component {
     }
 
     async populateChartData() {
-        const response = await fetch('systemusers/getchartdata');
+        const response = await fetch('systemusers/GetChartDataExclusive');
         const chartData = await response.json();
-        let userIds = [];
+        let monthes = [];
 
         for (let item of chartData) {
-            this.chartDataSet[0].data.push(item.activityDays);
-            userIds.push(item.userId);
+            this.chartDataSet[0].data.push(item.usersQty);
+            monthes.push(item.month + " month");
         }
 
         this.GetRollingRetentionXDay(7);
 
-        this.setState({ labels: userIds, datasets: this.chartDataSet });
+        this.setState({ labels: monthes, datasets: this.chartDataSet });
     }
 
     renderChart = () => {
         return (
-            <div style={{ width: "700px" }}>
+            <div className='font-figma' style={{ width: "700px" }}>
                 <p>Rolling Retention 7 day: {this.state.rollingRetensionXDay}%</p>
                 <hr />
                 <Bar
@@ -55,7 +56,7 @@ export class RollingRetention extends Component {
                     options={{
                         title: {
                             display: true,
-                            text: "Users life duration chart",
+                            text: "Users q-ty distribution by monthes of life",
                             fontSize: 20
                         },
                         legend: {
@@ -64,7 +65,7 @@ export class RollingRetention extends Component {
                         }
                     }}
                 />
-
+                <p style={{width: "250px", marginLeft: "auto", marginRight: "auto" }}>Users quantities by monthes of life</p>
             </div>
         );
     }
