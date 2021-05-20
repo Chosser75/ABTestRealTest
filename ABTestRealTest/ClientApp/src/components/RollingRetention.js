@@ -9,7 +9,8 @@ export class RollingRetention extends Component {
         this.state = {
             labels: [],
             datasets: [],
-            rollingRetensionXDay: 0
+            rollingRetensionXDay: 0,
+            loading: true
         };
 
         this.GetRollingRetentionXDay = this.GetRollingRetentionXDay.bind(this);
@@ -44,9 +45,9 @@ export class RollingRetention extends Component {
         this.setState({ labels: userIds, datasets: this.chartDataSet });
     }
 
-    render() {
+    renderChart = () => {
         return (
-            <div style={{ width:"700px" }}>
+            <div style={{ width: "700px" }}>
                 <p>Rolling Retention 7 day: {this.state.rollingRetensionXDay}</p>
                 <hr />
                 <Bar
@@ -63,7 +64,18 @@ export class RollingRetention extends Component {
                         }
                     }}
                 />
-                
+
+            </div>
+        );
+    }
+
+    render() {
+        let contents = this.state.loading
+            ? <p><em>Loading...</em></p>
+            : this.renderChart();
+        return (
+            <div>
+                {contents}
             </div>
         );
     }
@@ -71,6 +83,6 @@ export class RollingRetention extends Component {
     async GetRollingRetentionXDay(xDay) {
         const response = await fetch('systemusers/getrollingretentionxday/' + xDay);        
         var data = await response.json();
-        this.setState({ rollingRetensionXDay:data.value });
+        this.setState({ rollingRetensionXDay: data.value, loading: false });
     }
 }

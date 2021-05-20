@@ -21,7 +21,7 @@ export class Home extends Component {
             fontStyle: "normal",
             color: "#5D6E97"
         };
-
+        
         return (
             <div style={titleStyle}>
                 <h2>Hello, AB TEST REAL!</h2>
@@ -52,6 +52,7 @@ export class Home extends Component {
         );
     }
 
+    
     async runServerSpeedTests() {
         var response = await fetch('systemusers/RunUsersSpeedTest');
         var data = await response.json();
