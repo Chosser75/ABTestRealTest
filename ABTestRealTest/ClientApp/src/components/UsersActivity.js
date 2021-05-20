@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import '../custom.css'
 import { RollingRetention } from './RollingRetention';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 export class UserActivity extends Component {
     static displayName = 'System users activity';
@@ -13,123 +15,66 @@ export class UserActivity extends Component {
             loading: true
         };
         this.submitEditedDates = this.submitEditedDates.bind(this);
-        this.checkDate = this.checkDate.bind(this);
     }
 
     componentDidMount() {
         this.populateSystemUsers();
     }
 
-    async submitEditedDates() { 
+    
+    flipDate(date) {
+        let dateValues = date.split('.');
+        return dateValues[2] + "-" + dateValues[1] + "-" + dateValues[0];
+    }
+
+    formatDate(newDate) {
+        return this.flipDate(newDate) + "T00:00:00";
+    }
+
+    async submitEditedDates() {
         //var editedUsers = Object.assign([], this.state.systemUsers); // doesn't work
 
         for (var user of this.state.systemUsers) {
-            user.registrationDate = this.formatDate(user.registrationDate);
-            user.lastActivityDate = this.formatDate(user.lastActivityDate);
+            user.registrationDate = this.formatDate(new Date(user.registrationDate).toLocaleDateString());
+            user.lastActivityDate = this.formatDate(new Date(user.lastActivityDate).toLocaleDateString());
         }
 
         const response = await fetch('systemusers/updateusersdates', {
-                method: 'put',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(this.state.systemUsers)
-            })
+        })
             .catch(err => console.log(err));
-        
-        this.convertToLocaleDates(this.state.systemUsers);
+
+        this.convertToDatePickerDates(this.state.systemUsers);
 
         this.setState({ systemUsers: this.state.systemUsers, showRollingRetention: false });
 
         if (response.ok) {
             alert("Data is successfully saved to DB");
         }
-    }
-        
-    editDate = (field, id, newDate) => {
-        if (!/^[0-9.]+$/.test(newDate)) {
-            this.setState({
-                systemUsers: this.state.systemUsers
-            });
-            return;
+        else {
+            alert("Error!!! Data was not saved.");
         }
-
-        this.setDate(field, id, newDate);        
     }
 
     setDate(field, id, newDate) {
-            var user = this.getUserById(id);
+        var user = this.getUserById(id);
 
-            if (field === "registrationDate") {
-                user.registrationDate = newDate;
-            }
-            else {
-                user.lastActivityDate = newDate;
-            }
-
-            this.setState({
-                systemUsers: this.state.systemUsers
-            });
-    }
-
-    async checkDate(field, id, newDate) {
-        var isValid = this.validateDate(field, id, newDate)
-        if (isValid === false) {
-            var user = await this.getUserFromDb(id);
-            if (field === "registrationDate") {
-                this.setDate(field, id, new Date(user.registrationDate).toLocaleDateString());
-            }
-            else {
-                this.setDate(field, id, new Date(user.lastActivityDate).toLocaleDateString());
-            }
+        if (field === "registrationDate") {
+            user.registrationDate = newDate;
         }
         else {
-            var date = this.splittedDate.day + "." + this.splittedDate.month + "." + this.splittedDate.year;
-            date = this.formatDate(date);
-            this.setDate(field, id, new Date(date).toLocaleDateString());            
+            user.lastActivityDate = newDate;
         }
+
+        this.setState({
+            systemUsers: this.state.systemUsers
+        });
     }
-
-    validateDate(field, id, newDate) {
-        if (/^[0-9]{2}.[0-9]{2}.[0-9]{4}$/.test(newDate) || 
-            /^[1-9]{1}.[1-9]{1}.[0-9]{4}$/.test(newDate) ||
-            /^[1-9]{1}.[0-9]{2}.[0-9]{4}$/.test(newDate) ||
-            /^[0-9]{2}.[1-9]{1}.[0-9]{4}$/.test(newDate)) {
-            this.splitDate(newDate);
-
-            let day = Number(this.splittedDate.day);
-            let month = Number(this.splittedDate.month);
-            let year = Number(this.splittedDate.year);
-            if (day < 1 || month < 1 || year < 1 || month > 12 || day > 31) {
-                return false;
-            }
-
-            let regDate = "";
-            let lastDate = "";
-            let formattedDate = this.splittedDate.year + "-" + this.splittedDate.month + "-" + this.splittedDate.day;
-            var user = this.getUserById(id);
-
-            if (field === "registrationDate") {
-                regDate = formattedDate;
-                lastDate = this.flipDate(user.lastActivityDate);
-            }
-            else {
-                regDate = this.flipDate(user.registrationDate);
-                lastDate = formattedDate;
-            }
-
-            let regDateAsDate = new Date(regDate);
-            let lastDateAsDate = new Date(lastDate);
-
-            if (regDateAsDate.getTime() > lastDateAsDate.getTime()) {
-                return false;
-            }
-
-            return true;
-        }
-        return false;
-    }
-
+        
     getUserById = (id) => {
         for (var user of this.state.systemUsers) {
             if (user.id === id) {
@@ -138,45 +83,17 @@ export class UserActivity extends Component {
         }
     }
 
-    splittedDate = {
-        day: "",
-        month: "",
-        year: ""
+    validRangeRegisterDate = () => {
+
     }
 
-    flipDate(date) {
-        let dateValues = date.split('.');
-        return dateValues[2] + "-" + dateValues[1] + "-" + dateValues[0];
-    }
-
-    formatDate(newDate) {
-        this.splitDate(newDate);
-        let date = this.splittedDate.year + "-" + this.splittedDate.month + "-" + this.splittedDate.day + "T00:00:00";
-        return date;
-    }
-
-    splitDate(newDate) {
-        let dateValues = newDate.split('.');
-        this.splittedDate.day = dateValues[0];
-        this.splittedDate.month = dateValues[1];
-        this.splittedDate.year = dateValues[2];
-
-        if (this.splittedDate.day.length == 1) {
-            this.splittedDate.day = "0" + this.splittedDate.day;
-        }
-
-        if (this.splittedDate.month.length == 1) {
-            this.splittedDate.month = "0" + this.splittedDate.month;
-        }
-    }
-
-    convertToLocaleDates(data) {
+    convertToDatePickerDates(data) {
         for (let user of data) {
             if (user.registrationDate !== "0") {
-                user.registrationDate = new Date(user.registrationDate).toLocaleDateString();
+                user.registrationDate = new Date(user.registrationDate);
             }
             if (user.lastActivityDate !== "0") {
-                user.lastActivityDate = new Date(user.lastActivityDate).toLocaleDateString();
+                user.lastActivityDate = new Date(user.lastActivityDate);
             }
         }
     }
@@ -184,6 +101,7 @@ export class UserActivity extends Component {
     //------------------------------------------------------------------------------------------------------------------
     
     renderUserActivityTable = (systemUsers) => {
+        
         return (
             <div className='container-figma'>
                 <table className='table-figma' aria-labelledby="tabelLabel">
@@ -198,12 +116,22 @@ export class UserActivity extends Component {
                         {systemUsers.map(systemUser =>
                             <tr key={systemUser.id}>
                                 <td>{systemUser.id}</td>
-                                <td><input style={this.inputStyle} value={systemUser.registrationDate}
-                                    onChange={(event) => this.editDate("registrationDate", systemUser.id, event.target.value)}
-                                    onBlur={(event) => this.checkDate("registrationDate", systemUser.id, event.target.value)} /></td>
-                                <td><input style={this.inputStyle} value={systemUser.lastActivityDate}
-                                    onChange={(event) => this.editDate("lastActivityDate", systemUser.id, event.target.value)}
-                                    onBlur={(event) => this.checkDate("lastActivityDate", systemUser.id, event.target.value)} /></td>
+                                <td>
+                                    <DatePicker
+                                        dateFormat="dd.MM.yyyy"
+                                        selected={systemUser.registrationDate}
+                                        onChange={date => this.setDate("registrationDate", systemUser.id, date)}
+                                        filterDate={date => date <= systemUser.lastActivityDate }
+                                    />
+                                </td>
+                                <td>
+                                    <DatePicker
+                                        dateFormat="dd.MM.yyyy"
+                                        selected={systemUser.lastActivityDate}
+                                        onChange={date => this.setDate("lastActivityDate", systemUser.id, date)}
+                                        filterDate={date => date >= systemUser.registrationDate}
+                                    />
+                                </td>
                             </tr>
                         )}
                     </tbody>
@@ -264,7 +192,7 @@ export class UserActivity extends Component {
     async populateSystemUsers() {
         const response = await fetch('systemusers/getsystemusers');
         const data = await response.json();
-        this.convertToLocaleDates(data);
+        this.convertToDatePickerDates(data);
         this.setState({ systemUsers: data, loading: false });
     }
 

@@ -100,3 +100,16 @@ code {
     text-align: center;
     box-sizing: border-box;
 }
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+    width: 100%;
+    height: 45.4px;
+    border: none;
+    text-align: center;
+    font-family: Ubuntu;
+    font-style: normal;
+    color: #5D6E97;
+    outline: none;
+}
