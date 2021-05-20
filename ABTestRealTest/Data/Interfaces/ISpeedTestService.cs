@@ -8,6 +8,8 @@ namespace ABTestRealTest.Data.Interfaces
 {
     public interface ISpeedTestService
     {
-        Task<SpeedTestResults> RunSpeedTestAsync();
+        SpeedTestResults RunUsersSpeedTest();
+        Task<SpeedTestResults> RunUserSpeedTestAsync();
+        SpeedTestResults RunRetentionSpeedTest();
     }
 }

@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-
+import '../custom.css'
 import { RollingRetention } from './RollingRetention';
 
 export class UserActivity extends Component {

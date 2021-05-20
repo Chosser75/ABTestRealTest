@@ -20,22 +20,38 @@ namespace ABTestRealTest.Data.Services
             _retentionService = retentionService;
         }
 
-        public async Task<SpeedTestResults> RunSpeedTestAsync()
+        public SpeedTestResults RunUsersSpeedTest()
         {
             var results = new SpeedTestResults();
             var stopWatch = new Stopwatch();
-            
+
             stopWatch.Start();
             var users = _usersDbService.GetSystemUsers();
             stopWatch.Stop();
             results.GetUsersTime = (int)stopWatch.ElapsedMilliseconds;
             stopWatch.Reset();
 
+            return results;
+        }
+
+        public async Task<SpeedTestResults> RunUserSpeedTestAsync()
+        {
+            var results = new SpeedTestResults();
+            var stopWatch = new Stopwatch();
+
             stopWatch.Start();
             var user = await _usersDbService.GetSystemUserAsync(1);
             stopWatch.Stop();
             results.GetUserTime = (int)stopWatch.ElapsedMilliseconds;
             stopWatch.Reset();
+
+            return results;
+        }
+
+        public SpeedTestResults RunRetentionSpeedTest()
+        {
+            var results = new SpeedTestResults();
+            var stopWatch = new Stopwatch();
 
             stopWatch.Start();
             var retention = _retentionService.GetRollingRetentionXDay(7);

@@ -6,14 +6,12 @@ export class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            speedTestResults: {
-                getUsersTime: 0,
-                getUserTime: 0,
-                getRollingRetentionTime: 0
-            }
+            getUsersTime: 0,
+            getUserTime: 0,
+            getRollingRetentionTime: 0
         };
 
-        this.runServerSpeedTest = this.runServerSpeedTest.bind(this);
+        this.runServerSpeedTests = this.runServerSpeedTests.bind(this);
     }
 
     render () {
@@ -29,16 +27,16 @@ export class Home extends Component {
                 <br /><br />
                 <div>
                     <div className="form-group">
-                        GetUsers elapsed time: {this.state.speedTestResults.getUsersTime} milliseconds
+                        GetUsers elapsed time: {this.state.getUsersTime} milliseconds
                     </div>
                     <div className="form-group">
-                        GetUser elapsed time: {this.state.speedTestResults.getUserTime} milliseconds
+                        GetUser elapsed time: {this.state.getUserTime} milliseconds
                     </div>
                     <div className="form-group">
-                        GetRollingRetention elapsed time: {this.state.speedTestResults.getRollingRetentionTime} milliseconds
+                        GetRollingRetention elapsed time: {this.state.getRollingRetentionTime} milliseconds
                     </div>
                     <div className="form-group">
-                        <button className="btn btn-primary mt-4" onClick={this.runServerSpeedTest}>
+                        <button className="btn btn-primary mt-4" onClick={this.runServerSpeedTests}>
                             Run server speed test
                     </button>
                     </div>                   
@@ -47,9 +45,17 @@ export class Home extends Component {
         );
     }
 
-    async runServerSpeedTest() {
-        const response = await fetch('systemusers/getspeedtestresults');
+    async runServerSpeedTests() {
+        var response = await fetch('systemusers/RunUsersSpeedTest');
         var data = await response.json();
-        this.setState({ speedTestResults: data });
+        this.setState({ getUsersTime: data.getUsersTime });
+
+        var response = await fetch('systemusers/RunUserSpeedTest');
+        var data = await response.json();
+        this.setState({ getUserTime: data.getUserTime });
+
+        var response = await fetch('systemusers/RunRetentionSpeedTest');
+        var data = await response.json();
+        this.setState({ getRollingRetentionTime: data.getRollingRetentionTime });       
     }
 }

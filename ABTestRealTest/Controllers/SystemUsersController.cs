@@ -65,9 +65,21 @@ namespace ABTestRealTest.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<SpeedTestResults> GetSpeedTestResults()
+        public SpeedTestResults RunUsersSpeedTest()
         {
-            return await _testService.RunSpeedTestAsync();
+            return _testService.RunUsersSpeedTest();
+        }
+
+        [HttpGet("[action]")]
+        public async Task<SpeedTestResults> RunUserSpeedTestAsync()
+        {
+            return await _testService.RunUserSpeedTestAsync();
+        }
+
+        [HttpGet("[action]")]
+        public SpeedTestResults RunRetentionSpeedTest()
+        {
+            return _testService.RunRetentionSpeedTest();
         }
     }
 }
