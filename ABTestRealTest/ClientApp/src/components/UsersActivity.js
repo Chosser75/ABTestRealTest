@@ -198,7 +198,7 @@ export class UserActivity extends Component {
                 <button className="btn-figma mt-4" onClick={this.submitEditedDates}>Save</button>
                 <br/>
                 <button className="btn-figma mt-3" onClick={this.showHideRollingRetention}>
-                    {!this.state.showRollingRetention && "Calculate" || "Hide"}
+                    Calculate
                 </button>
                 <br /><br />
                 {this.state.showRollingRetention && <RollingRetention />}
@@ -225,7 +225,7 @@ export class UserActivity extends Component {
     };
 
     showHideRollingRetention = () => {
-        this.setState({ showRollingRetention: !this.state.showRollingRetention });
+        this.setState({ showRollingRetention: true });
     }
 
     render() {
