@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
-import '../custom.css'
+import '../custom.css';
 
 export class RollingRetention extends Component {
     static displayName = RollingRetention.name;

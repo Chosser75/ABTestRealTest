@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../custom.css'
+import '../custom.css';
 
 export class Home extends Component {
     static displayName = Home.name;
@@ -58,12 +58,12 @@ export class Home extends Component {
         var data = await response.json();
         this.setState({ getUsersTime: data.getUsersTime });
 
-        var response = await fetch('systemusers/RunUserSpeedTest');
-        var data = await response.json();
+        response = await fetch('systemusers/RunUserSpeedTest');
+        data = await response.json();
         this.setState({ getUserTime: data.getUserTime });
 
-        var response = await fetch('systemusers/RunRetentionSpeedTest');
-        var data = await response.json();
+        response = await fetch('systemusers/RunRetentionSpeedTest');
+        data = await response.json();
         this.setState({ getRollingRetentionTime: data.getRollingRetentionTime });       
     }
 }

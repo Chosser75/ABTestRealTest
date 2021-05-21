@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import '../custom.css'
+import '../custom.css';
 import { RollingRetention } from './RollingRetention';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
