@@ -7,7 +7,7 @@ namespace ABTestRealTest.Data.Models
 {
     public class ChartData
     {
-        public int UserId { get; set; }
-        public int ActivityDays { get; set; }
+        public int Month { get; set; }
+        public int UsersQty { get; set; }
     }
 }

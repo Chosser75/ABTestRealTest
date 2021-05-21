@@ -2,6 +2,7 @@
 using ABTestRealTest.Data.Models;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,18 +22,59 @@ namespace ABTestRealTest.Data.Services
             _usersDbService = usersDbService;
         }
 
-        public IEnumerable<ChartData> GetChartData()
+        // Распределение живущих пользователей по месяцам.
+        // В 1 месяц входят все, кто прожил 1 мес и более, и т.д.
+        public IEnumerable<ChartData> GetChartDataInclusive()
+        {               
+            var data = new List<ChartData>();
+            var users = _usersDbService.GetSystemUsers();
+
+            List<int> usersLifesInMonthes = GetUserLifesInMonthes(users);
+
+            int minMonths = usersLifesInMonthes.Min();
+            int maxMonth = usersLifesInMonthes.Max();
+            int monthsQty = maxMonth - minMonths + 1;
+
+            var arrayOfMonthes = Enumerable.Range(minMonths, monthsQty).ToArray();
+
+            foreach (var m in arrayOfMonthes)
+            {
+                data.Add(new ChartData
+                    {
+                        Month = m,
+                        UsersQty = usersLifesInMonthes.Where(l => l >= m).Count()
+                    }
+                );                 
+            }
+
+            return data;
+        }
+
+        // Распределение живущих пользователей по месяцам.
+        // В 1 месяц входят только те, кто прожил 1 мес, и т.д.
+        public IEnumerable<ChartData> GetChartDataExclusive()
         {
             var data = new List<ChartData>();
             var users = _usersDbService.GetSystemUsers();
 
-            foreach (var user in users)
+            List<int> usersLifesInMonthes = GetUserLifesInMonthes(users).OrderBy(l => l).ToList();
+
+            var lastQtyOfMonthes = 0;
+            
+            foreach (var m in usersLifesInMonthes)
             {
-                data.Add(new ChartData
+                if (m != lastQtyOfMonthes)
                 {
-                    UserId = user.Id,
-                    ActivityDays = (user.LastActivityDate.GetValueOrDefault() - user.RegistrationDate.GetValueOrDefault()).Days
-                });
+                    lastQtyOfMonthes = m;
+
+                    data.Add(new ChartData
+                            {
+                                Month = m,
+                                UsersQty = usersLifesInMonthes.Where(l => l == m).Count()
+                            }
+                    );
+                }
+                
             }
 
             return data;
@@ -51,7 +93,22 @@ namespace ABTestRealTest.Data.Services
             registeredUsersCount = (double)users.Where(u => (DateTime.Now
                         - u.RegistrationDate.GetValueOrDefault()).Days >= xDay).Count();
 
-            return registeredUsersCount == 0 ? 0 : returnedUsersCount / registeredUsersCount * 100;
+            return Math.Round(registeredUsersCount == 0 ? 0 : returnedUsersCount / registeredUsersCount * 100, 2);
+        }
+
+        private List<int> GetUserLifesInMonthes(IEnumerable<SystemUser> users)
+        {
+            List<int> usersLifesInMonthes = new();
+
+            foreach (var user in users)
+            {
+                var dateReg = user.RegistrationDate.GetValueOrDefault();
+                var dateLast = user.LastActivityDate.GetValueOrDefault();
+
+                usersLifesInMonthes.Add(((dateLast.Year - dateReg.Year) * 12) + dateLast.Month - dateReg.Month + 1);
+            }
+
+            return usersLifesInMonthes;
         }
     }
 }
