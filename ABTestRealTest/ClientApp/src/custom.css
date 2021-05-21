@@ -58,7 +58,6 @@ code {
 .table-figma thead tr {
     background-color: transparent;
     font-family: Ubuntu;
-    font-weight: 400 !important;
     font-style: normal;    
     font-size: 14px;
     line-height: 16px;
@@ -101,12 +100,9 @@ code {
 }
 
 .input-figma {
-    border: none;
-    height: 45.47px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    box-sizing: border-box;
+    font-family: Ubuntu !important;
+    font-style: normal;
+    color: #5D6E97;
 }
 
 .react-datepicker-wrapper,
@@ -116,8 +112,11 @@ code {
     height: 45.4px;
     border: none;
     text-align: center;
-    font-family: Ubuntu;
+    font-family: Ubuntu !important;
     font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 16px;
     color: #5D6E97;
     outline: none;
 }

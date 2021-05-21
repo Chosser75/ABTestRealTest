@@ -132,7 +132,7 @@ export class UserActivity extends Component {
                                     <DatePicker
                                         dateFormat="dd.MM.yyyy"
                                         customInput={
-                                            <MaskedInput mask="11.11.1111" placeholder="dd.mm.yyyy" />
+                                            <MaskedInput className="input-figma" mask="11.11.1111" placeholder="dd.mm.yyyy" />
                                         }
                                         selected={systemUser.lastActivityDate}
                                         onChange={date => this.setDate("lastActivityDate", systemUser.id, date)}
