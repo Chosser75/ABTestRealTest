@@ -58,8 +58,8 @@ code {
 .table-figma thead tr {
     background-color: transparent;
     font-family: Ubuntu;
-    font-style: normal;
-    font-weight: normal;
+    font-weight: 400 !important;
+    font-style: normal;    
     font-size: 14px;
     line-height: 16px;
     text-transform: uppercase;
@@ -68,6 +68,10 @@ code {
     text-align: center;
     width: 770px;
     height: 45.47px;    
+}
+
+.table-figma thead tr th {
+    font-weight: 400 !important;
 }
 
 .table-figma th,
