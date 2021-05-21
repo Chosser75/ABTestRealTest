@@ -11,5 +11,6 @@ namespace ABTestRealTest.Data.Interfaces
         SpeedTestResults RunUsersSpeedTest();
         Task<SpeedTestResults> RunUserSpeedTestAsync();
         SpeedTestResults RunRetentionSpeedTest();
+        SpeedTestResults CalculateChartData();
     }
 }

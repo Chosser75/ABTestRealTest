@@ -9,7 +9,8 @@ export class Home extends Component {
         this.state = {
             getUsersTime: 0,
             getUserTime: 0,
-            getRollingRetentionTime: 0
+            getRollingRetentionTime: 0,
+            calculateChartDataTime: 0
         };
 
         this.runServerSpeedTests = this.runServerSpeedTests.bind(this);
@@ -34,13 +35,16 @@ export class Home extends Component {
                 <br /><br />
                 <div>
                     <div className="form-group">
-                        GetUsers elapsed time: {this.state.getUsersTime} milliseconds
+                        Fetch all system users from DB elapsed time: {this.state.getUsersTime} milliseconds
                     </div>
                     <div className="form-group">
-                        GetUser elapsed time: {this.state.getUserTime} milliseconds
+                        Fetch system user by Id from DB elapsed time: {this.state.getUserTime} milliseconds
                     </div>
                     <div className="form-group">
-                        GetRollingRetention elapsed time: {this.state.getRollingRetentionTime} milliseconds
+                        Calculate rolling retention elapsed time: {this.state.getRollingRetentionTime} milliseconds
+                    </div>
+                    <div className="form-group">
+                        Calculate chart data elapsed time: {this.state.calculateChartDataTime} milliseconds
                     </div>
                     <div className="form-group">
                         <button className="btn-figma mt-4" onClick={this.runServerSpeedTests}>
@@ -64,6 +68,10 @@ export class Home extends Component {
 
         response = await fetch('systemusers/RunRetentionSpeedTest');
         data = await response.json();
-        this.setState({ getRollingRetentionTime: data.getRollingRetentionTime });       
+        this.setState({ getRollingRetentionTime: data.getRollingRetentionTime });   
+
+        response = await fetch('systemusers/CalculateChartDataTest');
+        data = await response.json();
+        this.setState({ calculateChartDataTime: data.calculateChartDataTime });
     }
 }

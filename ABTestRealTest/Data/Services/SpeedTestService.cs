@@ -56,7 +56,20 @@ namespace ABTestRealTest.Data.Services
             stopWatch.Start();
             var retention = _retentionService.GetRollingRetentionXDay(7);
             stopWatch.Stop();
-            results.GetUserTime = (int)stopWatch.ElapsedMilliseconds;
+            results.GetRollingRetentionTime = (int)stopWatch.ElapsedMilliseconds;
+
+            return results;
+        }
+
+        public SpeedTestResults CalculateChartData()
+        {
+            var results = new SpeedTestResults();
+            var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+            var chartData = _retentionService.GetChartDataExclusive();
+            stopWatch.Stop();
+            results.CalculateChartDataTime = (int)stopWatch.ElapsedMilliseconds;
 
             return results;
         }

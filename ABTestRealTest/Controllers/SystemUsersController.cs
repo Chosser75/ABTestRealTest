@@ -87,5 +87,11 @@ namespace ABTestRealTest.Controllers
         {
             return _testService.RunRetentionSpeedTest();
         }
+
+        [HttpGet("[action]")]
+        public SpeedTestResults CalculateChartDataTest()
+        {
+            return _testService.CalculateChartData();
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace ABTestRealTest.Data.Models
         public double GetUsersTime { get; set; }
         public double GetUserTime { get; set; }
         public double GetRollingRetentionTime { get; set; }
+        public double CalculateChartDataTime { get; set; }
     }
 }
